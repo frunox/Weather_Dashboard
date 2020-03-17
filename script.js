@@ -70,7 +70,13 @@ $(document).ready(function() {
         // call follow-up api endpoints
         getForecast(searchValue);
         getUVIndex(data.coord.lat, data.coord.lon);
-      }
+      },
+        // add error handling to the ajax GET call.  The function operates if an error ia returned by ajax.
+        error: function(xhr, status, error){
+          // xhr.status is the error code (400, etc.), and xhr.statusText is the description ('Bad Request', etc.)
+          var errorMessage = xhr.status + ': ' + xhr.statusText
+          alert('Error - ' + errorMessage);
+        }
     });
   }
   
@@ -105,6 +111,10 @@ $(document).ready(function() {
             $("#forecast .row").append(col);
           }
         }
+      },
+      error: function(xhr, status, error){
+        var errorMessage = xhr.status + ': ' + xhr.statusText
+        alert('Error - ' + errorMessage);
       }
     });
   }
