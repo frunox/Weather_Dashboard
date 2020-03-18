@@ -52,18 +52,23 @@ $(document).ready(function() {
 
         // create html content for current weather
         // the following variables hold specific weather data for the location searched as provided by the API
+        // .toLocaleDateString() converts the date to text.
         var title = $("<h3>").addClass("card-title").text(data.name + " (" + new Date().toLocaleDateString() + ")");
         // a 'card' is created to hold the current weather conditions
+        // other elements are created to hold the data for the current conditions
         var card = $("<div>").addClass("card");
         var wind = $("<p>").addClass("card-text").text("Wind Speed: " + data.wind.speed + " MPH");
         var humid = $("<p>").addClass("card-text").text("Humidity: " + data.main.humidity + "%");
         var temp = $("<p>").addClass("card-text").text("Temperature: " + data.main.temp + " °F");
+        // create the card body div with class="card-body"
         var cardBody = $("<div>").addClass("card-body");
         var img = $("<img>").attr("src", "https://openweathermap.org/img/w/" + data.weather[0].icon + ".png");
 
         // merge and add to page
         title.append(img);
+        // add the current conditions data to the card div (class="card-body")
         cardBody.append(title, temp, humid, wind);
+        // appends content (.card-body) to the card
         card.append(cardBody);
         $("#today").append(card);
 
@@ -75,7 +80,11 @@ $(document).ready(function() {
         error: function(xhr, status, error){
           // xhr.status is the error code (400, etc.), and xhr.statusText is the description ('Bad Request', etc.)
           var errorMessage = xhr.status + ': ' + xhr.statusText
-          alert('Error - ' + errorMessage);
+          var modalTitle = $('.modal-title');
+          // render the error message to the modal title h5 element
+          modalTitle.text('ERROR: ' + errorMessage);
+          // activate Bootstrap modal dialog
+          $('#myModal').modal('show')
         }
     });
   }
@@ -111,17 +120,15 @@ $(document).ready(function() {
             $("#forecast .row").append(col);
           }
         }
-      },
-      error: function(xhr, status, error){
-        var errorMessage = xhr.status + ': ' + xhr.statusText
-        alert('Error - ' + errorMessage);
       }
     });
   }
 
+  // function to get the UV index based on latitude and longitude
   function getUVIndex(lat, lon) {
     $.ajax({
       type: "GET",
+      // request data including lat and long
       url: "https://api.openweathermap.org/data/2.5/uvi?appid=600327cb1a9160fea2ab005509d1dc6d&lat=" + lat + "&lon=" + lon,
       dataType: "json",
       success: function(data) {
@@ -146,11 +153,11 @@ $(document).ready(function() {
 
   // get current history, if any
   var history = JSON.parse(window.localStorage.getItem("history")) || [];
-
+  // get the weather conditions for the last location saved to local storage
   if (history.length > 0) {
     searchWeather(history[history.length-1]);
   }
-
+  // render the search history by adding 'li's to the 'ul'.
   for (var i = 0; i < history.length; i++) {
     makeRow(history[i]);
   }
