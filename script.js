@@ -124,7 +124,7 @@ $(document).ready(function() {
     });
   }
 
-  // function to get the UV index based on latitude and longitude
+  // function to get the UV index based on latitude and longitude gathered in searchWeather()
   function getUVIndex(lat, lon) {
     $.ajax({
       type: "GET",
@@ -132,6 +132,7 @@ $(document).ready(function() {
       url: "https://api.openweathermap.org/data/2.5/uvi?appid=600327cb1a9160fea2ab005509d1dc6d&lat=" + lat + "&lon=" + lon,
       dataType: "json",
       success: function(data) {
+        // create elements to display the uv data
         var uv = $("<p>").text("UV Index: ");
         var btn = $("<span>").addClass("btn btn-sm").text(data.value);
         
